@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import toast from "react-hot-toast";
 
 const categories = [
   "Education","Healthcare","Environment","Poverty Alleviation",
@@ -26,7 +27,7 @@ const [form, setForm] = useState({
 
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
+    const stored = sessionStorage.getItem("user")
     if (stored) setUser(JSON.parse(stored));
   }, []);
 
@@ -39,7 +40,7 @@ const [form, setForm] = useState({
     e.preventDefault();
 
     if (!user || user.join_type !== "NGO") {
-      alert("Only NGO users can post donation requests. Please login as NGO.");
+      toast.error("Only NGO users can post donation requests. Please login as NGO.");
       return;
     }
 
@@ -49,20 +50,21 @@ const [form, setForm] = useState({
       const res = await fetch("http://localhost:5000/api/donation-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload)
       });
 
       const data = await res.json();
       if (!res.ok) {
-        alert(data.message || "Failed to create donation request");
+        toast.error(data.message || "Failed to create donation request");
         return;
       }
 
-      alert("Donation request created!");
+      toast.success("Donation request created!");
       navigate("/"); // or wherever
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import toast from "react-hot-toast";
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -11,28 +13,30 @@ const Login = () => {
   
     try {
       const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include",  
+  body: JSON.stringify({ email, password })
+});
+
   
       const data = await response.json();
   
       if (!response.ok) {
-        alert(data.message || "Login failed");
+        toast.error(data.message || "Login failed");
         return;
       }
   
-      alert("Login successful!");
+      toast.success("Login successful!");
   
       // Save logged-in user
-      localStorage.setItem("user", JSON.stringify(data.user));
-  
+
+      sessionStorage.setItem("user", JSON.stringify(data.user));  
       navigate('/');
   
     } catch (error) {
       console.error("Error:", error);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
   
