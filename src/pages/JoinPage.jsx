@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
+import toast from "react-hot-toast";
 
 const JoinPage = () => {
   const [fullName, setFullName] = useState("");
@@ -32,7 +33,7 @@ const JoinPage = () => {
 
   const handleVerifyNgo = async () => {
     if (!ngoDetails.name || !ngoDetails.regNumber) {
-      alert("Please fill NGO details before verification.");
+      toast.error("Please fill NGO details before verification.");
       return;
     }
   
@@ -50,14 +51,14 @@ const JoinPage = () => {
   
       if (res.ok) {
         setNgoVerified(true);
-        alert("✅ NGO verified successfully!");
+        toast.success("✅ NGO verified successfully!");
       } else {
         setNgoVerified(false);
-        alert("❌ " + data.message);
+        toast.error("❌ " + data.message);
       }
     } catch (err) {
       setNgoVerified(false);
-      alert("Server error while verifying NGO");
+      toast.error("Server error while verifying NGO");
     }
   };
   
@@ -96,13 +97,25 @@ const JoinPage = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("🎉 Account created successfully!");
-      } else {
-        alert("❌ Error: " + data.message);
+        toast.success("🎉 Account created successfully!");
+    
+        // CLEAR ALL FIELDS
+        setFullName("");
+        setEmail("");
+        setPhone("");
+        setPassword("");
+        setAddress("");
+        setRole("Donor");
+        setInterests([]);
+        setNgoVerified(false);
+        setNgoDetails({ name: "", regNumber: "", website: "" });
+    }
+    else {
+        toast.error("❌ Error: " + data.message);
       }
     } catch (err) {
       console.error(err);
-      alert("Server error. Try again.");
+      toast.error("Server error. Try again.");
     }
   };
 

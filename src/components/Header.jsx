@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -7,18 +8,26 @@ const Header = () => {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user")
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
 
   // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem("user");
+  const handleLogout = async () => {
+    await fetch("http://localhost:5000/api/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+    sessionStorage.removeItem("user");
+    
     setUser(null);
     navigate("/");
+    toast.success("logout successful");
+
   };
+  
 
   return (
     <header className="flex items-center justify-between px-10 py-4 shadow-sm bg-white">
