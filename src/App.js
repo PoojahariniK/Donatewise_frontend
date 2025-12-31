@@ -6,6 +6,11 @@ import JoinPage from "./pages/JoinPage";
 import Login from "./pages/Login";
 import AddDonationRequest from "./pages/AddDonationRequest";
 import AddVolunteerEvent from "./pages/AddVolunteerEvent";
+import Donar from "./pages/Donar";
+import Volunteer from "./pages/Volunteer";
+import DonationResponse from "./pages/DonationResponse";
+import VolunteeringResponse from "./pages/VolunteeringResponse";
+import DonationStatus from "./pages/DonationStatus";
 
 function App() {
   return (
@@ -18,6 +23,12 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/add-volunteer-event" element={<AddVolunteerEvent/>} />
         <Route path="/add-donation-request" element={<AddDonationRequest/>} />
+        <Route path="/donate" element={<Donar/>} />
+        <Route path="/volunteer" element={<Volunteer/>} />
+        <Route path="/donateresponse/:donationRequestId" element={<DonationResponse />} />
+        <Route path="/volunteerresponse/:id" element={<VolunteeringResponse/>} />
+        <Route path="/donation-status/:id" element={<DonationStatus />} />
+
       </Routes>
     </Router>
   );
