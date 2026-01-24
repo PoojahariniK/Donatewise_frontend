@@ -41,7 +41,7 @@ function DonationResponse() {
       handler: function () {
         toast.success("Payment initiated");
 
-        // 🔥 NAVIGATE TO STATUS PAGE
+        //  NAVIGATE TO STATUS PAGE
         navigate(`/donation-status/${donationResponseId}`);
       },
 

@@ -11,6 +11,12 @@ import Volunteer from "./pages/Volunteer";
 import DonationResponse from "./pages/DonationResponse";
 import VolunteeringResponse from "./pages/VolunteeringResponse";
 import DonationStatus from "./pages/DonationStatus";
+import NgoDonations from "./pages/NgoDonations";
+import UploadProof from "./pages/UploadProof";
+import EventParticipants from "./pages/EventParticipants";
+import NgoVolunteerEvents from "./pages/NgoVolunteerEvents";
+import About from "./pages/About";
+import NgoPage from "./pages/NgoPage";
 
 function App() {
   return (
@@ -21,6 +27,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/join" element={<JoinPage />} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/ngo" element={<NgoPage/>} />
         <Route path="/add-volunteer-event" element={<AddVolunteerEvent/>} />
         <Route path="/add-donation-request" element={<AddDonationRequest/>} />
         <Route path="/donate" element={<Donar/>} />
@@ -28,7 +36,10 @@ function App() {
         <Route path="/donateresponse/:donationRequestId" element={<DonationResponse />} />
         <Route path="/volunteerresponse/:id" element={<VolunteeringResponse/>} />
         <Route path="/donation-status/:id" element={<DonationStatus />} />
-
+        <Route path="/ngo/donations" element={<NgoDonations />} />
+        <Route path="/ngo/donations/:donationRequestId/upload-proof" element={<UploadProof />}/>
+        <Route path="/ngo/volunteer-events" element={<NgoVolunteerEvents />} />
+        <Route path="/ngo/volunteer-events/:eventId/participants" element={<EventParticipants />} />
       </Routes>
     </Router>
   );

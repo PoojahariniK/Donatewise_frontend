@@ -20,7 +20,7 @@ function DonationStatus() {
         const status = res.data.payment_status;
         setPaymentStatus(status);
 
-        // ✅ STOP POLLING once resolved
+        //  STOP POLLING once resolved
         if (status !== "pending") {
           clearInterval(interval);
         }

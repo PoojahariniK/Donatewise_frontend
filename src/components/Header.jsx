@@ -43,12 +43,12 @@ const Header = () => {
         <button onClick={() => navigate("/")} className="hover:text-blue-600">
           Home
         </button>
-        <a href="#about" className="hover:text-blue-600">
+        <Link to="/about" className="hover:text-blue-600">
           About
-        </a>
-        <a href="#ngos" className="hover:text-blue-600">
+        </Link>
+        <Link to="/ngos" className="hover:text-blue-600">
           NGOs
-        </a>
+        </Link>
 
         <Link to="/donate" className="hover:text-blue-600">
           Donate
@@ -73,6 +73,18 @@ const Header = () => {
             >
               Add Volunteer Event
             </button>
+            <button
+              onClick={() => navigate("/ngo/donations")}
+              className="hover:text-blue-600"
+            >
+              Manage Donation
+            </button>
+            <button
+      onClick={() => navigate("/ngo/volunteer-events")}
+      className="hover:text-blue-600"
+    >
+      Manage Volunteers
+    </button>
           </>
         )}
       </nav>

@@ -2,14 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import toast from "react-hot-toast";
+import LocationPicker from "../components/LocationPicker";
 
 const categories = [
-  "Education","Healthcare","Environment","Poverty Alleviation",
-  "Animal Welfare","Disaster Relief","Youth Development","Elderly Care"
+  "Education",
+  "Healthcare",
+  "Environment",
+  "Poverty Alleviation",
+  "Animal Welfare",
+  "Disaster Relief",
+  "Youth Development",
+  "Elderly Care"
 ];
 
 const AddDonationRequest = () => {
   const navigate = useNavigate();
+
   const [user, setUser] = useState(null);
 
   const [form, setForm] = useState({
@@ -17,8 +25,11 @@ const AddDonationRequest = () => {
     description: "",
     requirements: "",
     purpose: categories[0],
-    status: "Open",
+    status: "Open"
   });
+
+  const [location, setLocation] = useState(null);
+  const [radiusKm, setRadiusKm] = useState(10);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("user");
@@ -27,26 +38,40 @@ const AddDonationRequest = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!user || user.join_type !== "NGO") {
-      toast.error("Only NGO users can post donation requests. Please login as NGO.");
+      toast.error("Only NGO users can post donation requests.");
       return;
     }
 
-    const payload = { ...form, ngo_id: user.id };
+    if (!location) {
+      toast.error("Please select intended usage location on map.");
+      return;
+    }
+
+    const payload = {
+      ...form,
+      ngo_id: user.id,
+      expected_latitude: location.lat,
+      expected_longitude: location.lng,
+      allowed_radius_km: radiusKm
+    };
 
     try {
-      const res = await fetch("http://localhost:5000/api/donation-requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        "http://localhost:5000/api/donation-requests",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload)
+        }
+      );
 
       const data = await res.json();
 
@@ -55,7 +80,7 @@ const AddDonationRequest = () => {
         return;
       }
 
-      toast.success("Donation request created!");
+      toast.success("Donation request created successfully");
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -66,8 +91,11 @@ const AddDonationRequest = () => {
   return (
     <div>
       <Header />
+
       <div className="max-w-3xl mx-auto p-6">
-        <h2 className="text-2xl font-semibold mb-4">Create Donation Request</h2>
+        <h2 className="text-2xl font-semibold mb-4">
+          Create Donation Request
+        </h2>
 
         <form
           onSubmit={handleSubmit}
@@ -92,8 +120,10 @@ const AddDonationRequest = () => {
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
             >
-              {categories.map(c => (
-                <option key={c} value={c}>{c}</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
               ))}
             </select>
           </div>
@@ -110,13 +140,46 @@ const AddDonationRequest = () => {
           </div>
 
           <div>
-            <label className="block mb-1">Requirements (items / money)</label>
+            <label className="block mb-1">
+              Requirements (items / money)
+            </label>
             <textarea
               name="requirements"
               value={form.requirements}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
               required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1">
+              Intended Usage Location (click on map)
+            </label>
+
+            <LocationPicker
+              onSelect={(latlng) => setLocation(latlng)}
+            />
+
+            {location && (
+              <p className="text-sm text-gray-600 mt-2">
+                Selected: {location.lat.toFixed(5)},{" "}
+                {location.lng.toFixed(5)}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1">
+              Allowed Radius (km)
+            </label>
+            <input
+              type="number"
+              min="1"
+              max="200"
+              value={radiusKm}
+              onChange={(e) => setRadiusKm(Number(e.target.value))}
+              className="w-full border px-3 py-2 rounded"
             />
           </div>
 
